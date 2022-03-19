@@ -1,0 +1,48 @@
+{% load static %}
+
+<html>
+    <head>
+        Загрузите расписание
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    </head>
+    <body>
+        <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>{{ form }}</div>
+            <input type="submit" value="Загрузить">
+        </form>
+
+        {% if cabs %}
+            <table class="table table-bordered">
+            <tr>
+                <th>День недели</th>
+                <th>Часы звонков</th>
+                {% for cab in cabs %}
+                    <th>{{cab}}</th>
+                {% endfor %}
+            </tr>
+            {% for wday, times in cab_time_t.items %}
+            <tr>
+                <th rowspan="16">{{wday}}</th>
+                {% for time, d_n in times.items %}
+                    <th rowspan="2">{{time}}</th>
+                    {% for curr_d_n, values in d_n.items %}
+                        {% for i in values %}
+                            {% if i %}
+                            <td id="busy"></td>
+                            {% else %}
+                            <td id="free"></td>
+                            {% endif %}
+                        {% endfor %}
+                        </tr><tr>
+                    {% endfor %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+
+            </table>
+        {% endif %}
+    </body>
+</html>
